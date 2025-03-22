@@ -5,10 +5,12 @@
 #include <unistd.h>
 #include <assert.h>
 #include "akinator_function.h"
+#include "tree_create.h"
 
 static void search_new_line(Info_about_text* info);
 static void count_number_lines(Info_about_text* info);
 void        calculate_array_size(Info_about_text *info, const char* fname);
+void        fill_value(char* adr, int value);
 
 void read_commands(Info_about_text* info)
 {
@@ -141,3 +143,146 @@ void info_dtor(Info_about_text* info)
         free(info->ptr_line);
     }
 }
+
+void fill_value(char* adr, int value)
+{
+    for(int i = 0; i < COMMAND_LENGTH; i++)
+    {
+        adr[i] = value;
+    }
+}
+
+void insert_from_file(Info_about_text* info, Tree* tree)
+{
+    Node* node                 = (Node*)tree;
+    Node* parent               = tree->root ;
+    char  cmd[COMMAND_LENGTH]  = {}         ;
+    int   i                    = 0          ;
+    int   descent_height       = 0          ;
+
+    for(int size = 0; size < info->size_text; size++)
+    {
+        while(info->text[size] != '(' && info->text[size] != ')' && info->text[size] != ';' &&
+              size < info->size_text)
+        {
+            cmd[i] = info->text[size];
+            size++;
+            i++; 
+        }
+        i = 0;
+
+        if (info->text[size] == '(')
+        {   
+            descent_height++;
+
+            if (node != (Node*)tree)
+            {   
+                node = node_ctor(cmd, parent);
+                parent->left = node;
+                parent = node;
+
+                //insert_string(node, cmd);
+                tree->size++;
+                fill_value(cmd, 0);
+            }
+            else
+            {
+                node->data = cmd;
+                node = tree->root;
+
+                fill_value(cmd, 0);
+            }
+        }
+        else if (info->text[size] == ';')
+        {
+            node = node_ctor(cmd, parent);
+            parent->left = node;
+            parent = node;
+
+            //insert_string(node, cmd);
+            tree->size++;
+            fill_value(cmd, 0);
+        }
+        else if (info->text[size] == ')')
+        {   
+            //descent_height--; нужно функцию подъёма до нужной высоты
+
+            node = node_ctor(cmd, parent);
+            parent->right = node;
+            parent = node;
+
+            //insert_string(node, cmd);
+            tree->size++;
+            fill_value(cmd, 0);
+        }
+    }
+}
+
+// void insert_string(Node* node, char* cmd)
+// {   
+//     if (node == NULL){
+//         perror("you don't have a tree\n");
+//     }
+
+//     int   branch = POISON    ;
+//     Node* parent = 0         ;
+//     Node* node   = tree->root;
+
+//     while(node != NULL && node->data != POISON)
+//     {
+//         parent = node;
+
+//         if (value < node->data){
+//             branch = LEFT;
+//             node = node->left;
+//         }
+//         else{
+//             branch = RIGHT;
+//             node = node->right;
+//         }
+//     }
+    
+//     if (branch == LEFT || branch == RIGHT){
+//         node = node_ctor(value, parent);
+
+//         if (branch == LEFT){
+//             parent->left = node;
+//         }
+//         else{
+//             parent->right = node;
+//         }   
+//     }
+//     else{ //branch == POISON
+//         node->data = value;
+//     }
+//     (tree->size)++;
+// }
+
+// if (info->text[size] == '(')
+//         {
+//             if (node != tree->root)
+//             {   
+//                 node = node_ctor(cmd, parent);
+//                 parent->left = node;
+//                 parent = node;
+
+//                 insert_string(node, cmd);
+//                 tree->size++;
+//                 fill_value(cmd, 0);
+//                 i = 0;
+//             }
+//             else
+//             {
+//                 node->data = cmd;
+//                 fill_value(cmd, 0);
+//                 i = 0;
+//             }
+//         }
+//         else if (info->text[size] == ';')
+//         {
+
+//         }
+//         else if (info->text[size] == ')')
+//         {
+
+//         }

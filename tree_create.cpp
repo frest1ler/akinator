@@ -18,13 +18,13 @@ Node* get_pointer_node()
     return node;
 }
 
-Node* node_ctor(int value, Node* parent)
+Node* node_ctor(char* value, void* parent)
 {
     Node* node = get_pointer_node();
 
-    node->data    = value ;
-    node->parent  = parent;
-    node->pointer = node  ;
+    node->data    = value        ;
+    node->parent  = (Node*)parent;
+    node->pointer = node         ;
 
     return node;
 }
@@ -43,11 +43,11 @@ void node_destroy(Node* node)
         node->parent->right = NULL;
     }
     
-    node->data =    POISON;
-    node->left =    NULL  ;
-    node->right =   NULL  ;
-    node->parent =  NULL  ;
-    node->pointer = NULL  ;
+    node->data =    "EMPTY_LINE";
+    node->left =     NULL       ;
+    node->right =    NULL       ;
+    node->parent =   NULL       ;
+    node->pointer =  NULL       ;
 
     free(node);
 }
@@ -62,53 +62,53 @@ Tree* ctor_tree()
     }
     Node* node = get_pointer_node();
 
-    node->data    = POISON     ;
-    node->pointer = node       ;
-    node->parent  = (Node*)tree;
-    tree->root    = node       ;
+    node->data    = "EMPTY_LINE";
+    node->pointer =  node       ;
+    node->parent  =  (Node*)tree;
+    tree->root    =  node       ;
 
     return tree;
 }
 
-void insert(Tree* tree, int value)
-{   
-    if (tree == NULL){
-        perror("you don't have a tree\n");
-    }
+// void insert(Tree* tree, int value)
+// {   
+//     if (tree == NULL){
+//         perror("you don't have a tree\n");
+//     }
 
-    int   branch = POISON    ;
-    Node* parent = 0         ;
-    Node* node   = tree->root;
+//     int   branch = POISON    ;
+//     Node* parent = 0         ;
+//     Node* node   = tree->root;
 
-    while(node != NULL && node->data != POISON)
-    {
-        parent = node;
+//     while(node != NULL && node->data != POISON)
+//     {
+//         parent = node;
 
-        if (value < node->data){
-            branch = LEFT;
-            node = node->left;
-        }
-        else{
-            branch = RIGHT;
-            node = node->right;
-        }
-    }
+//         if (value < node->data){
+//             branch = LEFT;
+//             node = node->left;
+//         }
+//         else{
+//             branch = RIGHT;
+//             node = node->right;
+//         }
+//     }
     
-    if (branch == LEFT || branch == RIGHT){
-        node = node_ctor(value, parent);
+//     if (branch == LEFT || branch == RIGHT){
+//         node = node_ctor(value, parent);
 
-        if (branch == LEFT){
-            parent->left = node;
-        }
-        else{
-            parent->right = node;
-        }   
-    }
-    else{ //branch == POISON
-        node->data = value;
-    }
-    (tree->size)++;
-}
+//         if (branch == LEFT){
+//             parent->left = node;
+//         }
+//         else{
+//             parent->right = node;
+//         }   
+//     }
+//     else{ //branch == POISON
+//         node->data = value;
+//     }
+//     (tree->size)++;
+// }
 
 Node* go_back(Node* node, Tree* tree) 
 {   

@@ -8,7 +8,7 @@ const int RIGHT     =    1;
 const int POISON    = -333;
 
 Node* get_pointer_node();
-Node* node_ctor(int value, void* parent);
+Node* node_ctor(char* value, void* parent);
 Tree* ctor_tree();
 
 void  node_destroy  (Node* node);
