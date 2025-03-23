@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -10,7 +11,6 @@
 static void search_new_line(Info_about_text* info);
 static void count_number_lines(Info_about_text* info);
 void        calculate_array_size(Info_about_text *info, const char* fname);
-void        fill_value(char* adr, int value);
 
 void read_commands(Info_about_text* info)
 {
@@ -144,145 +144,83 @@ void info_dtor(Info_about_text* info)
     }
 }
 
-void fill_value(char* adr, int value)
+void insert_from_file(Info_about_text* info, Tree* tree) 
 {
-    for(int i = 0; i < COMMAND_LENGTH; i++)
-    {
-        adr[i] = value;
+    if (!info || !tree){
+        fprintf(stderr, "Invalid input: info or tree is NULL\n");
+        return;
     }
-}
 
-void insert_from_file(Info_about_text* info, Tree* tree)
-{
-    Node* node                 = (Node*)tree;
-    Node* parent               = tree->root ;
-    char  cmd[COMMAND_LENGTH]  = {}         ;
-    int   i                    = 0          ;
-    int   descent_height       = 0          ;
+    Node* parent              = tree->root;
+    Node* node                = NULL      ;
+    char  pr_symbol           = 0         ;
+    char  symbol              = 0         ;
+    int   index_last_sring    = 0         ;
 
-    for(int size = 0; size < info->size_text; size++)
+    for (int size = 0; size < info->size_text; size++) 
     {
-        while(info->text[size] != '(' && info->text[size] != ')' && info->text[size] != ';' &&
-              size < info->size_text)
+        while (size < info->size_text && info->text[size] != '(' && info->text[size] != ')' 
+               && info->text[size] != ';' && info->text[size] != '\r' && info->text[size] != '\0') 
         {
-            cmd[i] = info->text[size];
             size++;
-            i++; 
         }
-        i = 0;
+        symbol = info->text[size];  
 
-        if (info->text[size] == '(')
+        if (size < info->size_text && symbol == '(' && (pr_symbol == 0 || pr_symbol == '(')) 
         {   
-            descent_height++;
+            info->text[size] = '\0';
 
-            if (node != (Node*)tree)
-            {   
-                node = node_ctor(cmd, parent);
-                parent->left = node;
-                parent = node;
-
-                //insert_string(node, cmd);
-                tree->size++;
-                fill_value(cmd, 0);
+            printf("%s = case 1\n", info->text + index_last_sring);
+            if (node == NULL)
+            {
+                node = tree->root;
+                node->data = info->text + index_last_sring;
             }
             else
             {
-                node->data = cmd;
-                node = tree->root;
+                node = node_ctor(info->text + index_last_sring, parent);
+                parent->left = node;     
+            }
+            parent = node;  // Перемещаем parent на текущий узел
+            tree->size++;
+        } 
+        else if (size < info->size_text && symbol == ';') 
+        {   
+            info->text[size] = '\0';
 
-                fill_value(cmd, 0);
+            if (strcmp(info->text + index_last_sring, "\0") != 0)
+            {
+                printf("(%s) = case 2\n", info->text + index_last_sring);
+
+                // Создаем новый узел и добавляем его как левого потомка
+                node = node_ctor(info->text + index_last_sring, parent);
+            
+                parent->left = node;
+
+                tree->size++;
+            }
+        } 
+        else if (size < info->size_text && symbol == ')') 
+        {   
+            info->text[size] = '\0';
+
+            printf("(%s) = case 3\n", info->text + index_last_sring);
+
+            if (strcmp(info->text + index_last_sring, "\0") != 0)
+            {
+                node = node_ctor(info->text + index_last_sring, parent);
+
+                parent->right = node;
+
+                tree->size++;
+            }
+            // Поднимаемся на уровень вверх
+            if (parent != tree->root){     //мб тут поменять
+                parent = parent->parent;
             }
         }
-        else if (info->text[size] == ';')
-        {
-            node = node_ctor(cmd, parent);
-            parent->left = node;
-            parent = node;
 
-            //insert_string(node, cmd);
-            tree->size++;
-            fill_value(cmd, 0);
-        }
-        else if (info->text[size] == ')')
-        {   
-            //descent_height--; нужно функцию подъёма до нужной высоты
-
-            node = node_ctor(cmd, parent);
-            parent->right = node;
-            parent = node;
-
-            //insert_string(node, cmd);
-            tree->size++;
-            fill_value(cmd, 0);
-        }
+        pr_symbol = symbol;
+        index_last_sring = size + 1;
     }
 }
-
-// void insert_string(Node* node, char* cmd)
-// {   
-//     if (node == NULL){
-//         perror("you don't have a tree\n");
-//     }
-
-//     int   branch = POISON    ;
-//     Node* parent = 0         ;
-//     Node* node   = tree->root;
-
-//     while(node != NULL && node->data != POISON)
-//     {
-//         parent = node;
-
-//         if (value < node->data){
-//             branch = LEFT;
-//             node = node->left;
-//         }
-//         else{
-//             branch = RIGHT;
-//             node = node->right;
-//         }
-//     }
-    
-//     if (branch == LEFT || branch == RIGHT){
-//         node = node_ctor(value, parent);
-
-//         if (branch == LEFT){
-//             parent->left = node;
-//         }
-//         else{
-//             parent->right = node;
-//         }   
-//     }
-//     else{ //branch == POISON
-//         node->data = value;
-//     }
-//     (tree->size)++;
-// }
-
-// if (info->text[size] == '(')
-//         {
-//             if (node != tree->root)
-//             {   
-//                 node = node_ctor(cmd, parent);
-//                 parent->left = node;
-//                 parent = node;
-
-//                 insert_string(node, cmd);
-//                 tree->size++;
-//                 fill_value(cmd, 0);
-//                 i = 0;
-//             }
-//             else
-//             {
-//                 node->data = cmd;
-//                 fill_value(cmd, 0);
-//                 i = 0;
-//             }
-//         }
-//         else if (info->text[size] == ';')
-//         {
-
-//         }
-//         else if (info->text[size] == ')')
-//         {
-
-//         }

@@ -26,6 +26,9 @@ Node* node_ctor(char* value, void* parent)
     node->parent  = (Node*)parent;
     node->pointer = node         ;
 
+    printf("\nnode_ctor\n");
+    printf("data=%s\nptr=%p\nparent=%p\n\n", value, node, parent);
+
     return node;
 }
 
@@ -42,12 +45,11 @@ void node_destroy(Node* node)
     else{
         node->parent->right = NULL;
     }
-    
-    node->data =    "EMPTY_LINE";
-    node->left =     NULL       ;
-    node->right =    NULL       ;
-    node->parent =   NULL       ;
-    node->pointer =  NULL       ;
+
+    node->left =     NULL;
+    node->right =    NULL;
+    node->parent =   NULL;
+    node->pointer =  NULL;
 
     free(node);
 }
@@ -62,7 +64,6 @@ Tree* ctor_tree()
     }
     Node* node = get_pointer_node();
 
-    node->data    = "EMPTY_LINE";
     node->pointer =  node       ;
     node->parent  =  (Node*)tree;
     tree->root    =  node       ;
@@ -145,22 +146,22 @@ Node* go_left(Node* node, Tree* tree, int* add_el, FILE * point_to_file)
     if (node->right == NULL && node->left == NULL && node == node->parent->right){
         dump_node(node, point_to_file);
         printf("hlt\n");
-        printf("node=%p\n", node);
-        printf("hlt\n");
+        printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
         (*add_el)++;
     }
-    else if (node->left != NULL || node->right != NULL && node == node->parent->right){
-        dump_node(node, point_to_file);
-        printf("hltx2\n");
-        printf("node=%p\n", node);
-        printf("hltx2\n");
-        (*add_el)++;
-    }
+    // else if (node->left != NULL || node->right != NULL && node == node->parent->right){
+    //     dump_node(node, point_to_file);
+    //     printf("hltx2\n");
+    //     printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
+    //     (*add_el)++;
+    // }
     while (node->right != NULL || node->left != NULL)
     {   
         while (node->left != NULL){   
-            //printf("\ndata=%d\nptr=%p\nparent=%p\nleft=%p\nright=%p\n", node->data, node->pointer, node->parent, node->left, node->right);
+            printf("\ndata=%s\nptr=%p\nparent=%p\nleft=%p\nright=%p\n", node->data, node->pointer, node->parent, node->left, node->right);
+            printf("node->left->data=(%s)\n", node->left->data);
             node = node->left;
+
             dump_node(node, point_to_file); 
             (*add_el)++;
         }
@@ -242,3 +243,4 @@ void bypass(Tree* tree, FILE * point_to_file)
     }
     printf("end_bypass\n");
 }
+
