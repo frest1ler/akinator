@@ -189,10 +189,15 @@ void insert_from_file(Info_about_text* info, Tree* tree)
                     node = node_ctor(info->text + index_last_sring, parent);
                     parent->left = node;     
                 }
-                parent = node;  // Перемещаем parent на текущий узел
+                if (symbol == '('){
+                parent = node;
+                }
                 tree->size++;
             }
-            else
+            else if (pr_symbol == ')' && symbol == ';'){
+                parent = parent->parent;
+            }
+            else 
             {
                 level_tree--;    
             }
@@ -210,12 +215,10 @@ void insert_from_file(Info_about_text* info, Tree* tree)
                 node = node_ctor(info->text + index_last_sring, parent);
 
                 parent->right = node;
-
                 tree->size++;
             }
-            // Поднимаемся на уровень вверх
-            if (parent != tree->root){     //мб тут поменять
-                parent = parent->parent;
+            if (symbol == '('){
+                parent = node;
             }
         }
         else if (size < info->size_text && symbol == ')' && pr_symbol == ')')
