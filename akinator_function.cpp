@@ -156,6 +156,7 @@ void insert_from_file(Info_about_text* info, Tree* tree)
     char  pr_symbol           = 0         ;
     char  symbol              = 0         ;
     int   index_last_sring    = 0         ;
+    int   level_tree          = 0         ;
 
     for (int size = 0; size < info->size_text; size++) 
     {
@@ -166,42 +167,40 @@ void insert_from_file(Info_about_text* info, Tree* tree)
         }
         symbol = info->text[size];  
 
-        if (size < info->size_text && symbol == '(' && (pr_symbol == 0 || pr_symbol == '(')) 
+        if (size < info->size_text && 
+            (symbol == '(' && (pr_symbol == 0 || pr_symbol == '(')) || 
+            (pr_symbol == '(' && symbol ==';') ||
+            (pr_symbol == ')' && symbol == ';'))
         {   
-            info->text[size] = '\0';
+            level_tree++;
 
-            printf("%s = case 1\n", info->text + index_last_sring);
-            if (node == NULL)
-            {
-                node = tree->root;
-                node->data = info->text + index_last_sring;
-            }
-            else
-            {
-                node = node_ctor(info->text + index_last_sring, parent);
-                parent->left = node;     
-            }
-            parent = node;  // Перемещаем parent на текущий узел
-            tree->size++;
-        } 
-        else if (size < info->size_text && symbol == ';') 
-        {   
             info->text[size] = '\0';
 
             if (strcmp(info->text + index_last_sring, "\0") != 0)
             {
-                printf("(%s) = case 2\n", info->text + index_last_sring);
-
-                // Создаем новый узел и добавляем его как левого потомка
-                node = node_ctor(info->text + index_last_sring, parent);
-            
-                parent->left = node;
-
+                printf("%s = case 1\n", info->text + index_last_sring);
+                if (node == NULL)
+                {
+                    node = tree->root;
+                    node->data = info->text + index_last_sring;
+                }
+                else
+                {
+                    node = node_ctor(info->text + index_last_sring, parent);
+                    parent->left = node;     
+                }
+                parent = node;  // Перемещаем parent на текущий узел
                 tree->size++;
             }
+            else
+            {
+                level_tree--;    
+            }
         } 
-        else if (size < info->size_text && symbol == ')') 
+        else if (size < info->size_text && pr_symbol == ';' && (symbol == '(' || symbol == ')')) 
         {   
+            level_tree--;
+
             info->text[size] = '\0';
 
             printf("(%s) = case 3\n", info->text + index_last_sring);
@@ -219,7 +218,14 @@ void insert_from_file(Info_about_text* info, Tree* tree)
                 parent = parent->parent;
             }
         }
+        else if (size < info->size_text && symbol == ')' && pr_symbol == ')')
+        {
+            info->text[size] = '\0';
 
+            if (parent != tree->root){    
+                parent = parent->parent;
+            }
+        }
         pr_symbol = symbol;
         index_last_sring = size + 1;
     }
