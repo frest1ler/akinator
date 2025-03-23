@@ -149,12 +149,12 @@ Node* go_left(Node* node, Tree* tree, int* add_el, FILE * point_to_file)
         printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
         (*add_el)++;
     }
-    // else if (node->left != NULL || node->right != NULL && node == node->parent->right){
-    //     dump_node(node, point_to_file);
-    //     printf("hltx2\n");
-    //     printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
-    //     (*add_el)++;
-    // }
+    else if (node->left != NULL || node->right != NULL && node == node->parent->right){
+        dump_node(node, point_to_file);
+        printf("hltx2\n");
+        printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
+        (*add_el)++;
+    }
     while (node->right != NULL || node->left != NULL)
     {   
         while (node->left != NULL){   
@@ -227,7 +227,7 @@ void bypass(Tree* tree, FILE * point_to_file)
         return; // Проверка на NULL
     }
 
-    int found_size = 1;    
+    int found_size = 0;    
     Node* node = tree->root;
     printf("exp_size = %d\n", tree->size);
 

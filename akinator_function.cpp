@@ -156,7 +156,6 @@ void insert_from_file(Info_about_text* info, Tree* tree)
     char  pr_symbol           = 0         ;
     char  symbol              = 0         ;
     int   index_last_sring    = 0         ;
-    int   level_tree          = 0         ;
 
     for (int size = 0; size < info->size_text; size++) 
     {
@@ -172,8 +171,6 @@ void insert_from_file(Info_about_text* info, Tree* tree)
             (pr_symbol == '(' && symbol ==';') ||
             (pr_symbol == ')' && symbol == ';'))
         {   
-            level_tree++;
-
             info->text[size] = '\0';
 
             if (strcmp(info->text + index_last_sring, "\0") != 0)
@@ -197,15 +194,9 @@ void insert_from_file(Info_about_text* info, Tree* tree)
             else if (pr_symbol == ')' && symbol == ';'){
                 parent = parent->parent;
             }
-            else 
-            {
-                level_tree--;    
-            }
         } 
         else if (size < info->size_text && pr_symbol == ';' && (symbol == '(' || symbol == ')')) 
         {   
-            level_tree--;
-
             info->text[size] = '\0';
 
             printf("(%s) = case 3\n", info->text + index_last_sring);
