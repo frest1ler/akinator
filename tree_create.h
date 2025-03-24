@@ -9,6 +9,9 @@ const int POISON    = -333;
 
 Node* get_pointer_node();
 Node* node_ctor(char* value, void* parent);
+Node* go_left_search(Node* node, Tree* tree, int* add_el, char* data); 
+Node* go_back_search(Node* node, Tree* tree, char* data); 
+Node* search_node(Tree* tree, char* data);
 Tree* ctor_tree();
 
 void  node_destroy  (Node* node);

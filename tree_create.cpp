@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tree_create.h"
 #include "dump.h"
 
@@ -244,3 +245,116 @@ void bypass(Tree* tree, FILE * point_to_file)
     printf("end_bypass\n");
 }
 
+Node* search_node(Tree* tree, char* data)
+{   
+    if (tree == NULL || tree->root == NULL){
+        return NULL; // Проверка на NULL
+    }
+
+    int found_size = 0;    
+    Node* node = tree->root;
+
+    while(strcmp(data, node->data)!= 0 && found_size < tree->size)
+    {
+        printf("go_left, size = %d\n", found_size);
+
+        node = go_left_search(node, tree, &found_size, data);
+        if (strcmp(node->data, data) == 0){
+            return node;
+        }
+
+        printf("go_back, size = %d\n", found_size);
+        printf("exp=%d, have=%d\n", tree->size, found_size);
+        node = go_back_search(node, tree, data);
+
+        if (strcmp(node->data, data) == 0){
+            return node;
+        }
+    }
+    printf("%s : not found\n");
+    return NULL;
+}
+
+Node* go_left_search(Node* node, Tree* tree, int* add_el, char* data) 
+{
+    if (node == NULL){
+        return NULL; 
+    }
+
+    //printf("node = %p right = %p left = %p\n", node, node->right, node->left);  
+
+    if (node->right == NULL && node->left == NULL && node == node->parent->right){
+
+        if (strcmp(node->data, data) == 0){
+            return node;
+        }
+        printf("hlt\n");
+        printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
+        (*add_el)++;
+    }
+    else if (node->left != NULL || node->right != NULL && node == node->parent->right){
+
+        if (strcmp(node->data, data) == 0){
+            return node;
+        }
+        printf("hltx2\n");
+        printf("node=%p\ndata=%s\nparent=%p\nptr=%p\nleft=%p\nright=%p\n", node, node->data, node->parent, node->pointer, node->left, node->right);
+        (*add_el)++;
+    }
+    while (node->right != NULL || node->left != NULL)
+    {   
+        while (node->left != NULL){
+
+            if (strcmp(node->data, data) == 0){
+            return node;
+            }   
+            printf("\ndata=%s\nptr=%p\nparent=%p\nleft=%p\nright=%p\n", node->data, node->pointer, node->parent, node->left, node->right);
+            printf("node->left->data=(%s)\n", node->left->data);
+            node = node->left;
+
+            (*add_el)++;
+        }
+
+        if (node->right != NULL){
+
+            if (strcmp(node->data, data) == 0){
+            return node;
+            }
+            node = node->right;
+            (*add_el)++;
+        }
+    }
+    return node;
+}
+
+Node* go_back_search(Node* node, Tree* tree, char* data) 
+{   
+    Node* old_node = node;
+
+    node = node->parent;
+
+    while(node != tree->root)
+    {   
+        if (strcmp(node->data, data) == 0){
+            return node;
+        }
+
+        if (node->right != NULL && node->right != old_node){
+            printf("1after_back node=%p\n", node->right);
+            return node->right;
+        }
+        old_node = node        ;
+        node     = node->parent;
+    }
+    printf("2after_back node=%p\n", node);
+    if(node == tree->root){
+
+        if (strcmp(node->data, data) == 0){
+            return node;
+        }
+        node = node->right;
+    }
+    printf("3after_back node=%p\n", node);
+
+    return node;
+}

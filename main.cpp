@@ -23,6 +23,12 @@ int main()
 
     printf("s_dump\n");
 
+    Node* node = search_node(tree, "cat");
+    printf("\n\n\n\n\n\n\n");
+    printf("node==%p\n", node);
+    printf("node->data==%s\n", node->data);
+    printf("\n\n\n\n\n\n\n");
+
     dump(tree, "bata3.dot");
     
     dump(tree, "bata4.dot");
