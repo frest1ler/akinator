@@ -411,3 +411,55 @@ void compare_print_node_definition(Tree* tree, char* data_1, char* data_2)
         }
     }
 }
+
+void guess_node(Tree* tree)
+{   
+    Node* node   = tree->root;
+    int   answer = -1        ;
+
+    printf("hi let me try to guess the leaf\n");
+
+    while(node->left != NULL || node->right != NULL)
+    {
+        printf("\n%s?\nenter y(1) or n(0)\n", node->data);
+
+        answer = get_input();
+
+        if (answer == 1){
+            node = node->left;
+        }
+        else if (answer == 0){
+            node = node->right;
+        }    
+    }
+    printf("it is %s?\nenter y(1) or n(0)\n", node->data);
+
+    if ( get_input() == 1){
+        printf("Hooray, I guessed right\n");
+    }
+    
+}
+
+int get_input()
+{   
+    int answer = -1;
+
+    while((scanf("%d", &answer)) != 1 && (answer != 0 && answer != 1))
+    {
+        skip_buffer();
+        printf("Input error. Try again\a\n");
+    }
+    skip_buffer();
+
+    return answer;
+}
+
+void skip_buffer()
+{
+    int symbol = 0;
+
+	do
+	{
+        symbol = getchar();
+	} while (symbol != '\n' && symbol != EOF);
+}

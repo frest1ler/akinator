@@ -37,6 +37,8 @@ int main()
 
     compare_print_node_definition(tree, "dogfabr", "papagey");
 
+    guess_node(tree);
+
     printf("destroy\n");
 
     bypass_destroy(tree);
