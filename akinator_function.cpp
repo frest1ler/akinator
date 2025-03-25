@@ -239,15 +239,19 @@ void print_node_definition(Tree* tree, char* data)
 
     i = remember_way(tree, node, definition);
 
+    for(int k = 0; k < MAX_LEVEL_TREE; k++){
+        printf(" %d ", definition[k]);
+    }
+
+    printf("print_node_definition\n");
     printf("%s = ", node->data);
 
-    if (definition[i] == LEFT){
+    if (definition[i] == LEFT_NODE){
         printf(" %s->", tree->root->data);
     }
     else{
         printf(" no %s->", tree->root->data);
     }
-
     node = tree->root;
 
     while(i > 0)
@@ -288,28 +292,32 @@ int remember_way(Tree* tree, Node* node, int* definition)
 
     while(parent != tree->root)
     {   
-        printf("print_node_definition\n");
         if (i == MAX_LEVEL_TREE){
             perror("trees higher than 10 are not yet provided\n");
         }
 
         if (parent->left == node){
+            //printf("parent->left=%p\nparent->right=%p\nnode=%p\n", parent->left, parent->right, node);
             definition[i] = LEFT_NODE;
             //printf("data = %s, left\n", node->data);
         }
         else{
             definition[i] = RIGHT_NODE;
+            //printf("parent->left=%p\nparent->right=%p\nnode=%p\n", parent->left, parent->right, node);
             //printf("data = %s, right\n", node->data);
         }
+        node = parent;
         parent = parent->parent;
         i++;
     }
     if (parent == tree->root){
         if (parent->left == node){
+            //printf("parent->left=%p\nparent->right=%p\nnode=%p\n", parent->left, parent->right, node);
             definition[i] = LEFT_NODE;
             //printf("data = %s, left\n", node->data);
         }
         else{
+            //printf("parent->left=%p\nparent->right=%p\nnode=%p\n", parent->left, parent->right, node);
             definition[i] = RIGHT_NODE;
             //printf("data = %s, right\n", node->data);
         }
