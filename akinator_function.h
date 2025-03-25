@@ -15,10 +15,15 @@ struct Info_about_text
     char** ptr_line       ;
 };
 
-void read_commands(Info_about_text* info);
-void init_pointer_array(Info_about_text* info);
-void info_dtor(Info_about_text* info);
-void insert_from_file(Info_about_text* info, Tree* tree);
-void print_node_definition(Tree* tree, char* data);
+void  read_commands(Info_about_text* info);
+void  init_pointer_array(Info_about_text* info);
+void  info_dtor(Info_about_text* info);
+void  insert_from_file(Info_about_text* info, Tree* tree);
+void  print_node_definition(Tree* tree, char* data);
+void  compare_print_node_definition(Tree* tree, char* data_1, char* data_2);
+
+Node* descent(Node* node, int* definition, int i);
+
+int  remember_way(Tree* tree, Node* node, int* definition);
 
 #endif /*AKINATOR_FUNCTION_H*/

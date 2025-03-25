@@ -237,6 +237,51 @@ void print_node_definition(Tree* tree, char* data)
         return;
     }
 
+    i = remember_way(tree, node, definition);
+
+    printf("%s = ", node->data);
+
+    if (definition[i] == LEFT){
+        printf(" %s->", tree->root->data);
+    }
+    else{
+        printf(" no %s->", tree->root->data);
+    }
+
+    node = tree->root;
+
+    while(i > 0)
+    {
+        node = descent(node, definition, i);
+        i--;
+
+        if (i != 0)
+        {
+            if (definition[i] == LEFT_NODE){
+                printf("%s->", node->data);
+            }
+            else{
+                printf("no %s->", node->data);
+            }
+        }
+        else
+        {
+            if (definition[i] == LEFT_NODE){
+                printf("%s\n", node->data);    
+            }
+            else{
+                printf("no %s\n", node->data);
+            }
+        }
+        
+    }
+}
+
+int remember_way(Tree* tree, Node* node, int* definition)
+{   
+    int   i      = 0   ;
+    Node* parent = NULL;
+
     if (node != tree->root){
         parent = node->parent;
     }
@@ -269,23 +314,67 @@ void print_node_definition(Tree* tree, char* data)
             //printf("data = %s, right\n", node->data);
         }
     }
-    printf("%s = ", node->data);
-    node = tree->root;
-    printf(" %s->", node->data);
-    while(i > 0){
-        if (definition[i] == LEFT_NODE){
-            node = node->left;
-        }
-        else{
-            node = node->right;
-        }
-
-        if (i != 1){
-            printf("%s->", node->data);
-        }
-        else{
-            printf("%s\n", node->data);
-        }
-        i--;
+    return i;
+}
+Node* descent(Node* node, int* definition, int i)
+{
+    if (definition[i] == LEFT_NODE){
+        node = node->left;
     }
+    else{
+        node = node->right;
+    }
+    return node;
+}
+
+void compare_print_node_definition(Tree* tree, char* data_1, char* data_2)
+{
+    Node* node_1                       = search_node(tree, data_1);
+    Node* node_2                       = search_node(tree, data_2);
+    Node* parent_1                     = NULL                     ;
+    Node* parent_2                     = NULL                     ;
+    int   definition_1[MAX_LEVEL_TREE] = {}                       ;
+    int   definition_2[MAX_LEVEL_TREE] = {}                       ;
+    int   i_1                          = 0                        ;
+    int   i_2                          = 0                        ;
+
+    if (node_1->right != NULL || node_1->left != NULL){
+        printf("%s : this is not a leaf\n", node_1->data);
+        return;
+    }
+    if (node_2->right != NULL || node_2->left != NULL){
+        printf("%s : this is not a leaf\n", node_2->data);
+        return;
+    }
+
+    i_1 = remember_way(tree, node_1, definition_1);
+    i_2 = remember_way(tree, node_2, definition_2);
+
+    printf("common in definition: ");
+    while(strcmp(node_1->data, node_2->data) == 0)
+    {
+        node_1 = descent(node_1, definition_1, i_1);
+        node_2 = descent(node_2, definition_2, i_2);
+        i_1--;
+        i_2--;
+
+        if (i_1 != 0)
+        {
+            if (definition_1[i_1] == LEFT_NODE){
+                printf("%s->", node_1->data);
+            }
+            else{
+                printf("no %s->", node_1->data);
+            }
+        }
+        else
+        {
+            if (definition_1[i_1] == LEFT_NODE){
+                printf("%s\n", node_1->data);    
+            }
+            else{
+                printf("no %s\n", node_1->data);
+            }
+        }
+    }    
 }

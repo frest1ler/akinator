@@ -33,7 +33,9 @@ int main()
     
     //dump(tree, "bata4.dot");
 
-    print_node_definition(tree, "ded");
+    print_node_definition(tree, "papagey");
+
+    //compare_print_node_definition(tree, "ded", "bagrizkij");
 
     printf("destroy\n");
 
