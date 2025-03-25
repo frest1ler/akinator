@@ -29,9 +29,11 @@ int main()
     printf("node->data==%s\n", node->data);
     printf("\n\n\n\n\n\n\n");
 
-    dump(tree, "bata3.dot");
+    //dump(tree, "bata3.dot");
     
-    dump(tree, "bata4.dot");
+    //dump(tree, "bata4.dot");
+
+    print_node_definition(tree, "ded");
 
     printf("destroy\n");
 

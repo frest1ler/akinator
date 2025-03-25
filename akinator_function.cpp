@@ -147,7 +147,7 @@ void info_dtor(Info_about_text* info)
 void insert_from_file(Info_about_text* info, Tree* tree) 
 {
     if (!info || !tree){
-        fprintf(stderr, "Invalid input: info or tree is NULL\n");
+        printf("Invalid input: info or tree is NULL\n");
         return;
     }
 
@@ -175,7 +175,7 @@ void insert_from_file(Info_about_text* info, Tree* tree)
 
             if (strcmp(info->text + index_last_sring, "\0") != 0)
             {
-                printf("%s = case 1\n", info->text + index_last_sring);
+                //printf("%s = case 1\n", info->text + index_last_sring);
                 if (node == NULL)
                 {
                     node = tree->root;
@@ -199,7 +199,7 @@ void insert_from_file(Info_about_text* info, Tree* tree)
         {   
             info->text[size] = '\0';
 
-            printf("(%s) = case 3\n", info->text + index_last_sring);
+            //printf("(%s) = case 3\n", info->text + index_last_sring);
 
             if (strcmp(info->text + index_last_sring, "\0") != 0)
             {
@@ -222,5 +222,70 @@ void insert_from_file(Info_about_text* info, Tree* tree)
         }
         pr_symbol = symbol;
         index_last_sring = size + 1;
+    }
+}
+
+void print_node_definition(Tree* tree, char* data)
+{
+    Node* node                       = search_node(tree, data);
+    Node* parent                     = NULL                   ;
+    int   definition[MAX_LEVEL_TREE] = {}                     ;
+    int   i                          = 0                      ;
+
+    if (node->right != NULL || node->left != NULL){
+        printf("%s : this is not a leaf\n", node->data);
+        return;
+    }
+
+    if (node != tree->root){
+        parent = node->parent;
+    }
+
+    while(parent != tree->root)
+    {   
+        printf("print_node_definition\n");
+        if (i == MAX_LEVEL_TREE){
+            perror("trees higher than 10 are not yet provided\n");
+        }
+
+        if (parent->left == node){
+            definition[i] = LEFT_NODE;
+            //printf("data = %s, left\n", node->data);
+        }
+        else{
+            definition[i] = RIGHT_NODE;
+            //printf("data = %s, right\n", node->data);
+        }
+        parent = parent->parent;
+        i++;
+    }
+    if (parent == tree->root){
+        if (parent->left == node){
+            definition[i] = LEFT_NODE;
+            //printf("data = %s, left\n", node->data);
+        }
+        else{
+            definition[i] = RIGHT_NODE;
+            //printf("data = %s, right\n", node->data);
+        }
+    }
+    printf("%s = ", node->data);
+    node = tree->root;
+    printf(" %s->", node->data);
+    while(i > 0){
+        if (definition[i] == LEFT_NODE){
+            node = node->left;
+        }
+        else{
+            node = node->right;
+        }
+
+        if (i != 1){
+            printf("%s->", node->data);
+        }
+        else{
+            printf("%s\n", node->data);
+        }
+        i--;
     }
 }
