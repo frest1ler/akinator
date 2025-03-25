@@ -358,7 +358,7 @@ void compare_print_node_definition(Tree* tree, char* data_1, char* data_2)
     i_1 = remember_way(tree, node_1, definition_1);
     i_2 = remember_way(tree, node_2, definition_2);
 
-    printf("%s and %s common in definition: ", node_1->data, node_2->data);
+    printf("%s(first) and %s(second) common in definition: ", node_1->data, node_2->data);
 
     if (definition_1[i_1] == LEFT_NODE && definition_2[i_2] == LEFT_NODE){
         printf(" %s->", tree->root->data);
@@ -376,10 +376,38 @@ void compare_print_node_definition(Tree* tree, char* data_1, char* data_2)
         node_2 = descent(node_2, definition_2, i_2);
 
         if (strcmp(node_1->data, node_2->data) == 0)
-        {
-            print_subdefinition(node_1, definition_1, i_1); 
+        {   
+            if (definition_1[i_1 - 1] == definition_2[i_2 - 1]){
+                print_subdefinition(node_1, definition_1, i_1); 
+            }
             i_1--;
             i_2--;
         }
-    }    
+    }
+    printf("\b\b  \n");
+
+    if (i_1 >= 0 && i_2 >= 0)
+    {   
+        printf("first: ");
+        print_subdefinition(node_1->parent, definition_1, i_1);
+
+        while(i_1 > 0)
+        {   
+            node_1 = descent(node_1, definition_1, i_1);
+            i_1--;
+
+            print_subdefinition(node_1, definition_1, i_1); 
+        }   
+
+        printf("second:");
+        print_subdefinition(node_2->parent, definition_2, i_2); 
+
+        while(i_2 > 0)
+        {   
+            node_2 = descent(node_2, definition_2, i_2);
+            i_2--;
+
+            print_subdefinition(node_2, definition_2, i_2); 
+        }
+    }
 }
