@@ -21,6 +21,7 @@ void  info_dtor(Info_about_text* info);
 void  insert_from_file(Info_about_text* info, Tree* tree);
 void  print_node_definition(Tree* tree, char* data);
 void  compare_print_node_definition(Tree* tree, char* data_1, char* data_2);
+void print_subdefinition(Node* node, int* definition, int i);
 
 Node* descent(Node* node, int* definition, int i);
 

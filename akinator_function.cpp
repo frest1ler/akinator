@@ -239,10 +239,6 @@ void print_node_definition(Tree* tree, char* data)
 
     i = remember_way(tree, node, definition);
 
-    for(int k = 0; k < MAX_LEVEL_TREE; k++){
-        printf(" %d ", definition[k]);
-    }
-
     printf("print_node_definition\n");
     printf("%s = ", node->data);
 
@@ -255,29 +251,33 @@ void print_node_definition(Tree* tree, char* data)
     node = tree->root;
 
     while(i > 0)
-    {
+    {   
         node = descent(node, definition, i);
         i--;
 
-        if (i != 0)
-        {
-            if (definition[i] == LEFT_NODE){
-                printf("%s->", node->data);
-            }
-            else{
-                printf("no %s->", node->data);
-            }
+        print_subdefinition(node, definition, i); 
+    }
+}
+
+void print_subdefinition(Node* node, int* definition, int i)
+{
+    if (i != 0)
+    {
+        if (definition[i] == LEFT_NODE){
+            printf("%s->", node->data);
         }
-        else
-        {
-            if (definition[i] == LEFT_NODE){
-                printf("%s\n", node->data);    
-            }
-            else{
-                printf("no %s\n", node->data);
-            }
+        else{
+           printf("no %s->", node->data);
         }
-        
+    }
+    else
+    {
+        if (definition[i] == LEFT_NODE){
+            printf("%s\n", node->data);    
+        }
+        else{
+            printf("no %s\n", node->data);
+        }
     }
 }
 
@@ -358,31 +358,28 @@ void compare_print_node_definition(Tree* tree, char* data_1, char* data_2)
     i_1 = remember_way(tree, node_1, definition_1);
     i_2 = remember_way(tree, node_2, definition_2);
 
-    printf("common in definition: ");
+    printf("%s and %s common in definition: ", node_1->data, node_2->data);
+
+    if (definition_1[i_1] == LEFT_NODE && definition_2[i_2] == LEFT_NODE){
+        printf(" %s->", tree->root->data);
+    }
+    else if (definition_1[i_1] == RIGHT_NODE && definition_2[i_2] == RIGHT_NODE){
+        printf(" no %s->", tree->root->data);
+    }
+
+    node_1 = tree->root;
+    node_2 = tree->root;
+
     while(strcmp(node_1->data, node_2->data) == 0)
-    {
+    {   
         node_1 = descent(node_1, definition_1, i_1);
         node_2 = descent(node_2, definition_2, i_2);
-        i_1--;
-        i_2--;
 
-        if (i_1 != 0)
+        if (strcmp(node_1->data, node_2->data) == 0)
         {
-            if (definition_1[i_1] == LEFT_NODE){
-                printf("%s->", node_1->data);
-            }
-            else{
-                printf("no %s->", node_1->data);
-            }
-        }
-        else
-        {
-            if (definition_1[i_1] == LEFT_NODE){
-                printf("%s\n", node_1->data);    
-            }
-            else{
-                printf("no %s\n", node_1->data);
-            }
+            print_subdefinition(node_1, definition_1, i_1); 
+            i_1--;
+            i_2--;
         }
     }    
 }

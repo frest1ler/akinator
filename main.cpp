@@ -35,7 +35,7 @@ int main()
 
     print_node_definition(tree, "papagey");
 
-    //compare_print_node_definition(tree, "ded", "bagrizkij");
+    compare_print_node_definition(tree, "dogfabr", "papagey");
 
     printf("destroy\n");
 
