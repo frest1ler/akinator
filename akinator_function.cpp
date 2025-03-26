@@ -412,12 +412,10 @@ void compare_print_node_definition(Tree* tree, char* data_1, char* data_2)
     }
 }
 
-void guess_node(Tree* tree)
+int guess_node(Tree* tree, char* new_leaf)
 {   
     Node* node   = tree->root;
-    int   answer = -1        ;
-
-    printf("hi let me try to guess the leaf\n");
+    int   answer = 1         ;
 
     while(node->left != NULL || node->right != NULL)
     {
@@ -434,8 +432,56 @@ void guess_node(Tree* tree)
     }
     printf("it is %s?\nenter y(1) or n(0)\n", node->data);
 
-    if ( get_input() == 1){
+    if ((answer = get_input()) == 1){
         printf("Hooray, I guessed right\n");
+    }
+    else if (answer == 0)
+    {   
+        
+        printf("What did you wish for?\n");
+
+        scanf("%s", new_leaf);
+
+        int i = 0;
+
+        while(new_leaf[i] != '\0'){
+            //printf("new_leaf[%d] = %c ", i, new_leaf[i]);
+            i++;
+        }
+        i++;
+
+        printf("\nwhat is the difference between %s and %s\n", node->data, new_leaf);
+
+        scanf("%s", new_leaf + i);
+        //printf("f = %s\ns = %s",new_leaf, new_leaf + i);
+
+        Node* new_left_node  = node_ctor(node->data, node);
+        node->left = new_left_node;
+
+        Node* new_right_node = node_ctor(new_leaf, node);
+        node->right = new_right_node;
+
+        node->data = new_leaf + i;
+
+        tree->size +=2;
+    }
+    printf("Do you want to play again? Enter yes(1) or no(0)");
+
+    answer = get_input();
+
+    return answer;
+}
+
+void akinator(Tree* tree, char* new_leaf)
+{   
+    Node* node   = tree->root;
+    int   answer = 1         ;
+
+    printf("hi let me try to guess the leaf\n");
+
+    while (answer == 1)
+    {
+        answer = guess_node(tree, new_leaf);
     }
     
 }

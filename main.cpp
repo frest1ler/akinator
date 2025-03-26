@@ -13,6 +13,8 @@ int main()
 
     Info_about_text info = {};
 
+    char* new_leaf = (char*)calloc(COMMAND_LENGTH, sizeof(char));
+
     read_commands(&info);
 
     insert_from_file(&info, tree);
@@ -37,7 +39,9 @@ int main()
 
     compare_print_node_definition(tree, "dogfabr", "papagey");
 
-    guess_node(tree);
+    akinator(tree, new_leaf);
+
+    dump(tree, "bata3.dot");
 
     printf("destroy\n");
 
@@ -48,5 +52,9 @@ int main()
     }
 
     info_dtor(&info);
+
+    if (new_leaf != NULL){
+        free(new_leaf);
+    }
     return 0;
 }

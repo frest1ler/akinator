@@ -59,11 +59,11 @@ void dump_first_node(Tree* tree, FILE * point_to_file)
     }
 
     fprintf(point_to_file, "subgraph cluster_A {label=\"Облачко A\";style=dashed;node [shape=record];\n");
-    printf("parent=%p\n", tree);
-    printf("ptr=%p\n", tree->root);
-    printf("left=%p\n", tree->root->left);
-    printf("right=%p\n", tree->root->right);
-    printf("data=%s\n", tree->root->data);
+    //printf("parent=%p\n", tree);
+    //printf("ptr=%p\n", tree->root);
+    //printf("left=%p\n", tree->root->left);
+    //printf("right=%p\n", tree->root->right);
+    //printf("data=%s\n", tree->root->data);
 
     fprintf(point_to_file, "a%p [label=\"{Parent %p | Ptr %p | Type %d | Data %s | {Left %p | Right %p }}\"];\n root -> a%p;", tree->root,tree, tree->root, type, (tree->root)->data, (tree->root)->left, (tree->root)->right, tree->root);
 }

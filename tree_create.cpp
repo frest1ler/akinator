@@ -187,7 +187,7 @@ Node* go_left_destroy(Node* node, Tree* tree)
     while (node->right != NULL || node->left != NULL)
     {   
         while (node->left != NULL){   
-            //printf("\ndata=%d\nptr=%p\nparent=%p\nleft=%p\nright=%p\n", node->data, node->pointer, node->parent, node->left, node->right);
+            //printf("\ndata=%s\nptr=%p\nparent=%p\nleft=%p\nright=%p\n", node->data, node->pointer, node->parent, node->left, node->right);
             node = node->left;
         }
 
@@ -195,6 +195,7 @@ Node* go_left_destroy(Node* node, Tree* tree)
             node = node->right;
         }
     }
+    //printf("node->data_dest= %s\n", node->data);
     return node;
 }
 
